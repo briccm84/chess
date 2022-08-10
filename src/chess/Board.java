@@ -108,7 +108,7 @@ public class Board {
     }
     public boolean isCheckMate(){
         if(!whitesTurn){
-            System.out.println("black checkmate?");
+            //System.out.println("black checkmate?");
             if(getBlackKing().checkmate()){
                 System.out.println("white wins");
                 return true;
