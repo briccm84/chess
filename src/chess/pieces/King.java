@@ -74,6 +74,7 @@ public class King extends Piece {
                         if (this.space.getBoard().move(block)) {
                             //System.out.println(block.getCaptured().getType()+" "+block.getCaptured().getColor());
                             this.space.getBoard().unMove(block);
+                            this.space.getBoard().changeTurn();
                             return false;
                         }
                     }
