@@ -22,7 +22,20 @@ public class Pawn extends Piece{
         }
         //standard
         if(dify == direction && difx == 0 && wasEmpty()){
-            return validMove(move);
+            if(validMove(move)){
+                //promote
+
+                if(getColor() == TeamColor.WHITE && move.getMoveToy() == 7){
+                    promoteDisplay();
+                }
+                else if(getColor() == TeamColor.BLACK && move.getMoveToy() == 0){
+                    promoteDisplay();
+                }
+                return true;
+            }
+            else{
+                return false;
+            }
         }
         //attack
         else if(dify == direction && Math.abs(difx) == 1 && !wasEmpty()){
@@ -87,5 +100,30 @@ public class Pawn extends Piece{
         }
 
         return super.pathBlocked(move);
+    }
+    public void promote(Pieces type){
+        Piece piece;
+        switch(type){
+            case ROOK:
+                piece = new Rook(type,getColor());
+                break;
+            case KNIGHT:
+                piece = new Knight(type,getColor());
+                break;
+            case BISHOP:
+                piece = new Bishop(type,getColor());
+                break;
+            case QUEEN:
+                piece = new Queen(type,getColor());
+                break;
+            default:
+                piece = new Empty(Pieces.EMPTY,TeamColor.NONE);
+        }
+        this.space.setPiece(piece);
+
+    }
+    public void promoteDisplay(){
+        Pieces type = this.space.getSpaceDisplay().getBoardDisplay().getPromotionChoice();
+        promote(type);
     }
 }

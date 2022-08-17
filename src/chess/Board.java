@@ -11,10 +11,12 @@ public class Board {
     public Space[][] board;
     public ArrayList<Piece> whiteAlive,whiteDead,blackAlive,blackDead;
     boolean whitesTurn;
+    TeamColor turn;
     Move move;
     King whiteKing,blackKing;
     public Board(){
         whitesTurn = true;
+        this.turn = TeamColor.WHITE;
         this.board = new Space[8][8];
         whiteAlive = new ArrayList<>();
         whiteDead = new ArrayList<>();
@@ -105,6 +107,21 @@ public class Board {
             return false;
         }
         return true;
+    }
+    //move function for display only
+    public String displayMove(Move move){
+        this.move = move;
+        Piece temp1 = board[move.getMoveFromx()][move.getMoveFromy()].getPiece();
+        board[move.getMoveFromx()][move.getMoveFromy()].removePiece();
+        board[move.getMoveTox()][move.getMoveToy()].addPiece(temp1);
+        if(temp1.possibleMove(move)) {
+            changeTurn();
+        }
+        else{
+            unMove(move);
+            return "false";
+        }
+        return "true";
     }
     public boolean isCheckMate(){
         if(!whitesTurn){

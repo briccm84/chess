@@ -48,7 +48,8 @@ public class SpaceDisplay extends Rectangle {
             if(boardDisplay.isSelected()) {
                 int[] temp = boardDisplay.getSelectedSpace();
                 Move move = new Move(temp[0], temp[1], x, y, this.space.getBoard());
-                    if(boardDisplay.board.move(move)){
+                String moveString = boardDisplay.board.displayMove(move);
+                    if(moveString=="true" || moveString == "promote"){
                         boardDisplay.removePieceForMove();
                         removePiece();
                         this.boardDisplay.captured(move.getCaptured());
@@ -63,6 +64,9 @@ public class SpaceDisplay extends Rectangle {
                             }
                             boardDisplay.winner(winner);
                         }
+
+                    }
+                    else if(moveString == "false"){
 
                     }
                 boardDisplay.unhighlight();
@@ -122,4 +126,5 @@ public class SpaceDisplay extends Rectangle {
         Border highlight = new Border(borderStroke);
         stackpane.setBorder(highlight);
     }
+    public BoardDisplay getBoardDisplay(){return this.boardDisplay;}
 }
