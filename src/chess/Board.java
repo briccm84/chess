@@ -10,11 +10,11 @@ import java.util.Arrays;
 public class Board {
     public Space[][] board;
     public ArrayList<Piece> whiteAlive,whiteDead,blackAlive,blackDead;
-    boolean whitesTurn;
+    TeamColor turn;
     Move move;
     King whiteKing,blackKing;
     public Board(){
-        whitesTurn = true;
+        this.turn = TeamColor.WHITE;
         this.board = new Space[8][8];
         whiteAlive = new ArrayList<>();
         whiteDead = new ArrayList<>();
@@ -106,17 +106,30 @@ public class Board {
         }
         return true;
     }
+    //move function for display only
+    public String displayMove(Move move){
+        this.move = move;
+        Piece temp1 = board[move.getMoveFromx()][move.getMoveFromy()].getPiece();
+        board[move.getMoveFromx()][move.getMoveFromy()].removePiece();
+        board[move.getMoveTox()][move.getMoveToy()].addPiece(temp1);
+        if(temp1.possibleMove(move)) {
+            changeTurn();
+        }
+        else{
+            unMove(move);
+            return "false";
+        }
+        return "true";
+    }
     public boolean isCheckMate(){
-        if(!whitesTurn){
+        if(this.turn == TeamColor.BLACK){
             //System.out.println("black checkmate?");
             if(getBlackKing().checkmate()){
                 System.out.println("white wins");
                 return true;
             }
         }
-        else{
-            //working on winners display
-            //System.out.println("white checkmate?");
+        else if(this.turn == TeamColor.WHITE){
             if(getWhiteKing().checkmate()){
                 System.out.println("black wins");
                 return true;
@@ -154,14 +167,22 @@ public class Board {
         }
     }
     public Space getSpace(int x,int y){return this.board[x][y];}
-    public boolean isWhitesTurn(){return whitesTurn;}
+    public boolean isWhitesTurn(){return this.turn == TeamColor.WHITE;}
     public King getWhiteKing(){return this.whiteKing;}
     public King getBlackKing(){return this.blackKing;}
     public ArrayList<Piece> getWhiteAlive() {return whiteAlive;}
     public ArrayList<Piece> getBlackAlive() {return blackAlive;}
-    public void changeTurn(){whitesTurn = !whitesTurn;}
-    public void setWhitesTurn(){whitesTurn = true;}
-    public void setBlacksTurn(){whitesTurn = false;}
+    public void changeTurn(){
+        if(this.turn == TeamColor.WHITE){
+            this.turn = TeamColor.BLACK;
+        }
+        else if(this.turn == TeamColor.BLACK){
+            this.turn = TeamColor.WHITE;
+        }
+    }
+    public void setWhitesTurn(){this.turn = TeamColor.WHITE;}
+    public void setBlacksTurn(){this.turn = TeamColor.BLACK;}
+    public void setTurnNone(){this.turn = TeamColor.NONE;}
     public void printBoard(){
         for(Space[] spaces: board){
             String row = "";

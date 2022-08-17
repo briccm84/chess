@@ -37,6 +37,7 @@ public class Space {
     public Pieces getPieceType(){return piece.type;}
     public TeamColor getPieceColor(){return piece.color;}
     public Piece getPiece(){return piece;}
+    public void setPiece(Piece piece){this.piece = piece;}
     public boolean isEmpty(){return this.piece.getType() == Pieces.EMPTY;}
     public Space getSpace(int x, int y){return board.getSpace(x,y);}
 
