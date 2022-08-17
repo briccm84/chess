@@ -1,10 +1,7 @@
 package Display;
 
 import chess.*;
-import chess.pieces.Bishop;
-import chess.pieces.Knight;
-import chess.pieces.Queen;
-import chess.pieces.Rook;
+import chess.pieces.*;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,6 +22,7 @@ public class BoardDisplay extends GridPane {
     ChessDisplay chessDisplay;
     SpaceDisplay[][] boardDisplay = new SpaceDisplay[8][8];
     Board board;
+    VBox promotionMessage;
     int[] highlightedPosition = {-1,-1};
     public void createUI(BorderPane parent, Board board,ChessDisplay chessDisplay) {
         this.parent = parent;
@@ -41,15 +39,13 @@ public class BoardDisplay extends GridPane {
         board.connectSpaceDisplays(boardDisplay);
         parent.setCenter(this);
     }
-    public Pieces getPromotionChoice(){
-        //working on pawn promotion selections, solutioon: each imagview needs a seperate event so anymousely add events in for loop
+    public Pieces getPromotionChoice(Pawn pawn){
         AtomicReference<Pieces> type = new AtomicReference<>(Pieces.EMPTY);
         //System.out.println("promotion");
-        VBox promotionMessage = new VBox();
-        promotionMessage.getChildren().add(new Text("choose piece to promote pawn"));
+        this.promotionMessage = new VBox();
+        this.promotionMessage.getChildren().add(new Text("choose piece to promote pawn"));
         Piece[] pieces = new Piece[]{new Rook(Pieces.ROOK,TeamColor.WHITE),new Knight(Pieces.KNIGHT,TeamColor.WHITE),new Bishop(Pieces.BISHOP,TeamColor.WHITE),new Queen(Pieces.QUEEN,TeamColor.WHITE)};
         HBox promotionOptions = new HBox();
-        Handler[] promotionEvents = new Handler[3];
         int index = 0;
         for(Piece piece: pieces) {
             String fileName = piece.getFileName();
@@ -58,8 +54,18 @@ public class BoardDisplay extends GridPane {
                 Image image = new Image(inputStream);
                 ImageView imageView = new ImageView(image);
                 EventHandler<MouseEvent> clickedPiece = e -> {
-                    type.set(piece.getType());
-                    System.out.println("clickedPiece: "+type );
+                    pawn.promote(piece.getType());
+                    pawn.space.getSpaceDisplay().removePiece();
+                    pawn.space.getSpaceDisplay().showPiece();
+                    removePromotionMessage();
+                    if(pawn.isWhite()){
+                        pawn.space.getBoard().setBlacksTurn();
+                    }
+                    else{
+                        pawn.space.getBoard().setWhitesTurn();
+                    }
+                    //type.set(piece.getType());
+                    //System.out.println("clickedPiece: "+type );
                 };
                 imageView.addEventFilter(MouseEvent.MOUSE_CLICKED, clickedPiece);
                  promotionOptions.getChildren().add(imageView);
@@ -73,6 +79,9 @@ public class BoardDisplay extends GridPane {
         this.parent.setBottom(promotionMessage);
 
         return type.get();
+    }
+    public void removePromotionMessage(){
+        this.parent.getChildren().remove(this.promotionMessage);
     }
 
     public void spaceHighlighted(int x,int y){

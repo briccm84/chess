@@ -123,7 +123,8 @@ public class Pawn extends Piece{
 
     }
     public void promoteDisplay(){
-        Pieces type = this.space.getSpaceDisplay().getBoardDisplay().getPromotionChoice();
-        promote(type);
+        this.space.getBoard().setTurnNone();
+        this.space.getSpaceDisplay().getBoardDisplay().getPromotionChoice(this);
+
     }
 }
