@@ -72,16 +72,12 @@ public class SpaceDisplay extends Rectangle {
                 boardDisplay.unhighlight();
             }
             else{
-                /*System.out.println("no space is highlighted");
-                System.out.println("whites turn: "+boardDisplay.board.isWhitesTurn()+" iswhite: "+boardDisplay.board.getSpace(x,y).piece.isWhite());*/
                 if((boardDisplay.board.isWhitesTurn() && boardDisplay.board.getSpace(x,y).piece.isWhite())){
                     boardDisplay.spaceHighlighted(x,y);
                     highlight();
-                    //System.out.println("piece: "+boardDisplay.board.getSpace(x,y).piece.getType() +boardDisplay.board.getSpace(x,y).piece.getColor());
                 }
                 if(!boardDisplay.board.isWhitesTurn() && !boardDisplay.board.getSpace(x,y).piece.isWhite()&&!boardDisplay.board.getSpace(x,y).isEmpty()){
                     boardDisplay.spaceHighlighted(x,y);
-                    //System.out.println("piece: "+boardDisplay.board.getSpace(x,y).piece.getType() +boardDisplay.board.getSpace(x,y).piece.getColor());
                     highlight();
                 }
             }
@@ -108,7 +104,7 @@ public class SpaceDisplay extends Rectangle {
             }
         }
         catch (Exception e){
-            System.out.println(e);
+            System.out.println("Something went wrong with showpiece in SpaceDisplay");
         }
     }
     public void removePiece(){

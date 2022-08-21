@@ -41,12 +41,7 @@ public class Board {
         Piece knight2 = new Knight(Pieces.KNIGHT,TeamColor.WHITE);
         Piece bishop2 = new Bishop(Pieces.BISHOP,TeamColor.WHITE);
         Piece[] backRow = {rook,knight,bishop,this.whiteKing,queen,bishop2,knight2,rook2};
-
-
-        //puts king in first position
-        whiteAlive.add(this.whiteKing);
         whiteAlive.addAll(Arrays.asList(backRow));
-        whiteAlive.remove(5);
 
         for (int i = 0; i < 8; i++) {
             board[i][0].addPiece(backRow[i]);
@@ -57,7 +52,6 @@ public class Board {
             board[i][1].addPiece(p);
             whiteAlive.add(p);
         }
-
         //black back row
         rook = new Rook(Pieces.ROOK,TeamColor.BLACK);
         knight = new Knight(Pieces.KNIGHT,TeamColor.BLACK);
@@ -68,10 +62,7 @@ public class Board {
         knight2 = new Knight(Pieces.KNIGHT,TeamColor.BLACK);
         bishop2 = new Bishop(Pieces.BISHOP,TeamColor.BLACK);
         Piece[] blackBackRow = {rook,knight,bishop,this.blackKing,queen,bishop2,knight2,rook2};
-        //puts king in first position
-        blackAlive.add(this.blackKing);
-        blackAlive.addAll(Arrays.asList(backRow));
-        blackAlive.remove(5);
+        blackAlive.addAll(Arrays.asList(blackBackRow));
 
         for (int i = 0; i < 8; i++) {
             board[i][7].addPiece(blackBackRow[i]);
@@ -123,7 +114,6 @@ public class Board {
     }
     public boolean isCheckMate(){
         if(this.turn == TeamColor.BLACK){
-            //System.out.println("black checkmate?");
             if(getBlackKing().checkmate()){
                 System.out.println("white wins");
                 return true;
@@ -175,13 +165,21 @@ public class Board {
     public void changeTurn(){
         if(this.turn == TeamColor.WHITE){
             this.turn = TeamColor.BLACK;
+            this.board[0][0].getSpaceDisplay().getBoardDisplay().changeTurn(TeamColor.BLACK);
         }
         else if(this.turn == TeamColor.BLACK){
             this.turn = TeamColor.WHITE;
+            this.board[0][0].getSpaceDisplay().getBoardDisplay().changeTurn(TeamColor.WHITE);
         }
     }
-    public void setWhitesTurn(){this.turn = TeamColor.WHITE;}
-    public void setBlacksTurn(){this.turn = TeamColor.BLACK;}
+    public void setWhitesTurn(){
+        this.turn = TeamColor.WHITE;
+        this.board[0][0].getSpaceDisplay().getBoardDisplay().changeTurn(TeamColor.WHITE);
+    }
+    public void setBlacksTurn(){
+        this.turn = TeamColor.BLACK;
+        this.board[0][0].getSpaceDisplay().getBoardDisplay().changeTurn(TeamColor.BLACK);
+    }
     public void setTurnNone(){this.turn = TeamColor.NONE;}
     public void printBoard(){
         for(Space[] spaces: board){

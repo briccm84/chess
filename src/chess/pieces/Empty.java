@@ -9,7 +9,7 @@ public class Empty extends Piece {
         super(type, color);
     }
     public boolean possibleMove(Move move){
-        System.out.println("an empty was moved");
+
         return false;
     }
 }
