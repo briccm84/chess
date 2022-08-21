@@ -23,11 +23,15 @@ public class BoardDisplay extends GridPane {
     SpaceDisplay[][] boardDisplay = new SpaceDisplay[8][8];
     Board board;
     VBox promotionMessage;
+    VBox vBox;
+    TurnDisplay turnDisplay;
     int[] highlightedPosition = {-1,-1};
     public void createUI(BorderPane parent, Board board,ChessDisplay chessDisplay) {
         this.parent = parent;
         this.board = board;
         this.chessDisplay = chessDisplay;
+        this.vBox = new VBox();
+
         this.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0),new Insets(0))));
 
         for (int i = 0; i < 8; i++) {
@@ -37,11 +41,12 @@ public class BoardDisplay extends GridPane {
             }
         }
         board.connectSpaceDisplays(boardDisplay);
-        parent.setCenter(this);
+        this.vBox.getChildren().add(this);
+        this.turnDisplay = new TurnDisplay(this.vBox);
+        parent.setCenter(this.vBox);
     }
     public Pieces getPromotionChoice(Pawn pawn){
         AtomicReference<Pieces> type = new AtomicReference<>(Pieces.EMPTY);
-        //System.out.println("promotion");
         this.promotionMessage = new VBox();
         this.promotionMessage.getChildren().add(new Text("choose piece to promote pawn"));
         Piece[] pieces = new Piece[]{new Rook(Pieces.ROOK,TeamColor.WHITE),new Knight(Pieces.KNIGHT,TeamColor.WHITE),new Bishop(Pieces.BISHOP,TeamColor.WHITE),new Queen(Pieces.QUEEN,TeamColor.WHITE)};
@@ -64,8 +69,6 @@ public class BoardDisplay extends GridPane {
                     else{
                         pawn.space.getBoard().setWhitesTurn();
                     }
-                    //type.set(piece.getType());
-                    //System.out.println("clickedPiece: "+type );
                 };
                 imageView.addEventFilter(MouseEvent.MOUSE_CLICKED, clickedPiece);
                  promotionOptions.getChildren().add(imageView);
@@ -82,6 +85,9 @@ public class BoardDisplay extends GridPane {
     }
     public void removePromotionMessage(){
         this.parent.getChildren().remove(this.promotionMessage);
+    }
+    public void changeTurn(TeamColor color){
+        this.turnDisplay.changeTurn(color);
     }
 
     public void spaceHighlighted(int x,int y){

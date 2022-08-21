@@ -10,17 +10,14 @@ public class King extends Piece {
     public King(Pieces type, TeamColor color) {super(type, color);}
     public boolean checkmate(){
         if(isInCheck()) {
-            //System.out.println("check");
             ArrayList<ArrayList<int[]>> paths = new ArrayList<>();
             ArrayList<Piece> threats = getCheckmateThreats();
             ArrayList<int[]> threatPath = new ArrayList<>();
             for (Piece threat : threats) {
-                //System.out.println(threat.toString());
                 int[] position = {threat.getx(), threat.gety()};
                 threatPath.add(position);
                 int dify = threat.gety() - this.gety();
                 int difx = threat.getx() - this.getx();
-                //System.out.println("difx: "+difx+"   dify: "+dify);
                 //bishop attack
                 if (Math.abs(dify) == Math.abs(difx)) {
                     int j = threat.gety() - Integer.signum(dify);
@@ -45,7 +42,6 @@ public class King extends Piece {
             //knight attack
             Piece knightThreat = getKnightCheckmateThreat();
             if (knightThreat.getType() == Pieces.KNIGHT) {
-                //System.out.println("knight checkmate?");
                 ArrayList<int[]> knightPath = new ArrayList<>();
                 knightPath.add(new int[]{knightThreat.getx(), knightThreat.gety()});
                 paths.add(knightPath);
@@ -53,7 +49,6 @@ public class King extends Piece {
             //pawn attack
             Piece pawnThreat = getPawnCheckmateThreat();
             if (pawnThreat.getType() == Pieces.PAWN) {
-                //System.out.println("pawn checkmate?");
                 ArrayList<int[]> pawnPath = new ArrayList<>();
                 pawnPath.add(new int[]{pawnThreat.getx(), pawnThreat.gety()});
                 paths.add(pawnPath);
@@ -67,29 +62,32 @@ public class King extends Piece {
             //blocking check
             for (ArrayList<int[]> tpath : paths) {
                 for (int[] ints : tpath) {
-                    //System.out.print(ints[0] + "," + ints[1] + "   ");
                     for (Piece piece : teamPieces) {
                         Move block = new Move(piece.getx(), piece.gety(), ints[0], ints[1], this.space.getBoard());
-                        //System.out.println(piece.getx()+", "+piece.gety()+ "   moveto: "+ints[0]+","+ints[1]);
                         if (this.space.getBoard().move(block)) {
-                            //System.out.println(block.getCaptured().getType()+" "+block.getCaptured().getColor());
                             this.space.getBoard().unMove(block);
                             this.space.getBoard().changeTurn();
                             return false;
                         }
                     }
                 }
+            }
                 //moving king out of check
-            /*int[] kingMoves = new int[] {-1,0,1};
+            int[] kingMoves = new int[] {-1,0,1};
             for(int x: kingMoves){
                 for(int y: kingMoves){
-                    Move kingMove = new Move(getx(),gety(),getx()+x,gety()+y,this.space.getBoard());
-                    if (this.space.getBoard().move(kingMove)) {
-                        return false;
-                    }
+                        Move kingMove = new Move(getx(), gety(), getx() + x, gety() + y, this.space.getBoard());
+                        if (kingMove.isOnBoard() && this.space.getBoard().move(kingMove)) {
+                            this.space.getBoard().unMove(kingMove);
+                            if(getColor() == TeamColor.WHITE) {
+                                this.space.getBoard().setWhitesTurn();
+                            }
+                            else if(getColor() == TeamColor.BLACK) {
+                                this.space.getBoard().setBlacksTurn();
+                            }
+                            return false;
+                        }
                 }
-            }*/
-                //System.out.println();
             }
         }
         else{
@@ -165,7 +163,6 @@ public class King extends Piece {
             return wasSameColor() || !this.space.getSpace(4,0).isEmpty()|| !this.space.getSpace(6,0).isEmpty()||getKnightThreats(4,0)||!checkThreats(4,0).isEmpty();
         }
         else if(getColor() == TeamColor.BLACK && move.getMoveFromx() == 3 && move.getMoveFromy() == 7 && dify == 0 && move.getMoveTox() == 1 && this.space.getSpace(0,7).getPiece().getType() == Pieces.ROOK ){
-            //System.out.println("samecolor: "+ wasSameColor()+"  2,7.isempty(): "+this.space.getSpace(2,7).isEmpty());
             return wasSameColor() || !this.space.getSpace(2,7).isEmpty()||getKnightThreats(2,7)||!checkThreats(2,7).isEmpty();
         }
         else if(getColor() == TeamColor.BLACK && move.getMoveFromx() == 3 && move.getMoveFromy() == 7 && dify == 0 && move.getMoveTox() == 5 && this.space.getSpace(7,7).getPiece().getType() == Pieces.ROOK ){
@@ -247,7 +244,6 @@ public class King extends Piece {
         }
         boolean check = false;
         for (Piece p:threats) {
-            //System.out.println(p.getColor()+"; "+p.getType());
             if(p.getType() == Pieces.KNIGHT && p.getColor() != getColor()){
                 check = true;
                 break;
@@ -384,7 +380,6 @@ public class King extends Piece {
             }
             //up left
             for (int i = 1; x-i>=0 && y-i>=0 ; i++) {
-                //System.out.println((x-i)+","+(y-i));
                 if(this.space.getSpace(this.x-i,this.y-i).isEmpty()){
                     continue;
                 }
@@ -575,7 +570,6 @@ public class King extends Piece {
         }
         //up left
         for (int i = 1; x-i>=0 && y-i>=0 ; i++) {
-            //System.out.println((x-i)+","+(y-i));
             if(this.space.getSpace(x-i,y-i).isEmpty()){
                 continue;
             }
@@ -645,7 +639,6 @@ public class King extends Piece {
         boolean check = false;
         for (Piece p:threats) {
             if(p.getType() == Pieces.KNIGHT && p.getColor() != getColor()){
-                //System.out.println(p.getColor()+" "+p.getType()+ ": "+p.getx()+","+p.gety());
                 check = true;
                 break;
             }
@@ -679,9 +672,6 @@ public class King extends Piece {
         if(threats.get(7).getType() == Pieces.QUEEN && threats.get(7).getColor() != getColor() || threats.get(7).getType() == Pieces.BISHOP && threats.get(7).getColor() != getColor()){
             threatMates.add(threats.get(7));
         }
-        /*for(Piece p:threatMates){
-            System.out.println(p.getColor()+" "+p.getType()+ ": "+p.getx()+","+p.gety());
-        }*/
         return threatMates;
     }
 

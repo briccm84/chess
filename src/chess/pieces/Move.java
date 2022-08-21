@@ -19,7 +19,6 @@ public class Move {
         this.moveFromy = moveFromy;
         this.board = board;
         if(!(moveTox>= 0 && moveTox < 8 && moveToy >=0 && moveToy <8)) {
-            System.out.println("move is to off the board");
             captured = new Empty(Pieces.EMPTY, TeamColor.NONE);
         }
         else {
@@ -32,5 +31,11 @@ public class Move {
     public int getMoveFromx() {return moveFromx;}
     public int getMoveFromy() {return moveFromy;}
     public Piece getCaptured(){return captured;}
+    public Boolean isOnBoard(){
+        if((this.moveTox >= 0 && this.moveTox<8)&&(this.moveToy >= 0 && this.moveToy<8)){
+           return true;
+        }
+        return false;
+    }
     public String toString(){return "from: "+moveFromx+","+moveFromy+"\nto: "+moveTox+","+moveToy;}
 }

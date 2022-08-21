@@ -38,7 +38,7 @@ public class CapturedPiecesDisplay extends VBox {
             this.getChildren().add(imageView);
         }
         catch (Exception e){
-            //System.out.println("capture piece display has an error");
+            System.out.println("something went wrong in capturedPiecesDisplay");
         }
 
     }
